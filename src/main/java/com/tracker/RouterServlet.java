@@ -1,11 +1,11 @@
-package com.helloworld;
+package com.tracker;
 
-import com.helloworld.admin.category.commands.GetCategoriesListCommand;
-import com.helloworld.commands.IndexCommand;
-import com.helloworld.commands.SecuredUserCommand;
-import com.helloworld.security.commands.AuthenticateCommand;
-import com.helloworld.security.commands.LoginCommand;
-import com.helloworld.security.commands.LogoutCommand;
+import com.tracker.admin.category.commands.*;
+import com.tracker.commands.IndexCommand;
+import com.tracker.commands.SecuredUserCommand;
+import com.tracker.security.commands.AuthenticateCommand;
+import com.tracker.security.commands.LoginCommand;
+import com.tracker.security.commands.LogoutCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +30,13 @@ public class RouterServlet extends HttpServlet {
         commands.put("/secured.command", new SecuredUserCommand());
         commands.put("/logout.command", new LogoutCommand());
         commands.put("/index.command", new IndexCommand());
-        commands.put("/getCategoriesList.command", new GetCategoriesListCommand());
+        commands.put("/get_categories_list.command", new GetCategoriesListCommand());
+        commands.put("/get_category_page.command", new GetCategoryPageCommand());
+        commands.put("/add_new_category.command", new AddNewCategoryCommand());
+        commands.put("/edit_category_page.command", new EditCategoryPageCommand());
+        commands.put("/delete_category.command", new DeleteCategoryCommand());
+        commands.put("/update_category.command", new UpdateCategoryCommand());
+
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.helloworld.security.commands;
+package com.tracker.security.commands;
 
-import com.helloworld.Command;
+import com.tracker.Command;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +11,8 @@ public class AuthenticateCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String email = request.getParameter("user-email");
-        String password = request.getParameter("user-password");
+        String email = request.getParameter("user-email").trim();
+        String password = request.getParameter("user-password").trim();
 
         if (email.equals("vadym.khomenko@gmail.com")) {
 

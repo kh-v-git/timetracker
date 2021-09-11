@@ -1,4 +1,4 @@
-package com.helloworld.admin.category;
+package com.tracker.admin.category;
 
 public class Category {
     private Integer id;
