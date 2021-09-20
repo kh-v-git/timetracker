@@ -1,10 +1,8 @@
 package com.tracker.admin.category.commands;
 
 import com.tracker.Command;
-import com.tracker.admin.category.Category;
-import com.tracker.admin.category.CategoryRepository;
-import com.tracker.admin.category.CategoryRepositoryInMemoryImpl;
-import com.tracker.admin.category.CategoryService;
+import com.tracker.admin.category.*;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,15 +16,20 @@ public class EditCategoryPageCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CategoryRepository categoryRepository = CategoryRepositoryInMemoryImpl.getInstance();
+        CategoryRepository categoryRepository =  new CategoryRepositorySQLImpl();
         CategoryService categoryService = new CategoryService(categoryRepository);
 
-
-        int editCatID = Integer.valueOf(request.getParameter("category_id"));
+        int editCatID;
+        try {
+        editCatID = Integer.parseInt(request.getParameter("categoryId"));
         Category editCat = categoryService.getCategoryByID(editCatID);
-        request.getSession().setAttribute("edit_category", editCat);
+        request.getSession().setAttribute("editCategory", editCat);
+        }catch (NumberFormatException n) {
+            request.setAttribute("error", "Category add error");
+            log.log(Level.ERROR, "Category ID parse error. No Id found.", n);
+        }
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/admin/category_edit.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/admin/category/category_edit.jsp");
         requestDispatcher.forward(request, response);
     }
 }

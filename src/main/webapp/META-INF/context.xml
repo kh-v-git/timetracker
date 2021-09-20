@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <!--//////TOMCAT\\\\\\-->
+    <!--///DataBasePool\\\-->
+    <!--//////CONFIG\\\\\\-->
+    <!--////////FOR\\\\\\\-->
+    <!--////MYSQLDriver\\\-->
+    <Resource
+            name="jdbc/DataBaseTimeTracker"
+            auth="Container"
+            type="javax.sql.DataSource"
+            username="manager"
+            password="sql123sql"
+            driverClassName="com.mysql.cj.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/time_tracker_db?autoReconnect=true"
+            validationQuery="select 1"
+            defaultTransactionIsolation="READ_UNCOMMITTED"
+            defaultAutoCommit="TRUE"
+            maxActive="20"
+            maxIdle="10"
+            maxWait="10000"/>
+</Context>

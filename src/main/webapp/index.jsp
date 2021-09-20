@@ -1,17 +1,28 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Welcome Page</title>
+    <title>User DashBoard</title>
 </head>
 <body>
-<h2>Hey, user ${email}!</h2>
-<a href="secured.command">User page</a>
+<span>${error}</span>
+<span>${actionStatus}</span>
+<h1> </h1>
+<ul style="list-style-type:none">
+    <li><a href="">Dashboard</a></li>
+    <li><a href="">MyActivities</a></li>
+    <li><button type="button" formaction="">Log Activity</button></li>
+    <li><a href="logout.command">Logout</a></li>
+</ul>
 
-<form action="logout.command" method="post">
-    <input type="submit" value="Logout"/>
-</form>
+<table>
+    <caption>Logged Activities</caption>
+    <tr>
+        <th scope="col">Activity Name</th>
+        <th scope="col">Category</th>
+        <th scope="col">Time logged</th>
+    </tr>
+</table>
 </body>
+</html>

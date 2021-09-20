@@ -20,23 +20,20 @@ public class AuthenticationFilter implements Filter {
 
         String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
-        if (path.startsWith("/login.command") || path.startsWith("/authenticate.command") ) {
+        if (path.startsWith("/login.command") || path.startsWith("/authenticate.command") || path.startsWith("/register_user_page.command")) {
             chain.doFilter(request, response);
             return;
         }
 
-        String email = (String) httpRequest.getSession().getAttribute("user-email");
+        String email = (String) httpRequest.getSession().getAttribute("user_email");
         if (email == null || email.isEmpty()) {
-            ((HttpServletResponse)response).sendRedirect("login.command");
+            ((HttpServletResponse) response).sendRedirect("login.command");
             return;
         }
 
         //TODO add logic to check user role vs request path
-
         chain.doFilter(request, response);
-
     }
-
 
 
 }

@@ -1,32 +1,32 @@
 package com.tracker.admin.category;
 
 public class Category {
-    private Integer id;
-    private String name;
-    private String description;
+    private int categoryId;
+    private String categoryName;
+    private String categoryDescription;
 
 
-    public String getDescription() {
-        return description;
+    public String getCategoryDescription() {
+        return categoryDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCategoryDescription(String description) {
+        this.categoryDescription = description;
     }
 
-    public Integer getId() {
-        return id;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCategoryId(int id) {
+        this.categoryId = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String name) {
+        this.categoryName = name;
     }
 }

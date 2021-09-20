@@ -11,19 +11,25 @@ public class AuthenticateCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String email = request.getParameter("user-email").trim();
-        String password = request.getParameter("user-password").trim();
+        String email = request.getParameter("user_email");
+        String password = request.getParameter("user_password");
 
-        if (email.equals("vadym.khomenko@gmail.com")) {
-
+        if (email.equals("root@root.com")) {
             HttpSession session = request.getSession();
-            session.setAttribute("user-email", email);
-            session.setAttribute("role", "user");
+            session.setAttribute("user_email", email);
+            session.setAttribute("role", "root");
             response.sendRedirect("secured.command");
         } else {
-            request.setAttribute("error", "Wrong username or password");
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/login.jsp");
-            requestDispatcher.forward(request, response);
+            if (email.equals("user@user.com")) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user_email", email);
+                session.setAttribute("role", "user");
+                response.sendRedirect("index.command");
+            } else {
+                request.setAttribute("error", "Wrong username or password");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/login.jsp");
+                requestDispatcher.forward(request, response);
+            }
         }
     }
 }

@@ -8,12 +8,14 @@
     <title>Admin Page</title>
 </head>
 <body>
+<span>${error}</span>
+<span>${actionStatus}</span>
 <h1>Admin`s page </h1>
 <ul>
     <li><a href="">Reports</a></li>
-    <li><a href="">Users</a></li>
-    <li><a href="get_categories_list.command">Activity Categories</a></li>
-    <li><a href="">Activities</a></li>
+    <li><a href="get_user_admin_main.command">Users</a></li>
+    <li><a href="get_activities_main.command">Activities</a></li>
+    <li><a href="get_categories_main.command">Activity Categories</a></li>
 </ul>
 
 <form action="logout.command" method="post">
