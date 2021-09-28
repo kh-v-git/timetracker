@@ -1,54 +1,63 @@
+
+SET NAMES 'utf8';
+SET CHARACTER SET 'utf8';
+
 DROP DATABASE IF EXISTS time_tracker_db;
 
 CREATE DATABASE time_tracker_db;
 USE time_tracker_db;
 
 CREATE TABLE user(
-                     user_id INT AUTO_INCREMENT PRIMARY KEY ,
-                     email VARCHAR(255) UNIQUE NOT NULL ,
-                     password VARCHAR(255) NOT NULL ,
-                     role VARCHAR(255) NOT NULL,
-                     first_name VARCHAR(255) NOT NULL ,
-                     last_name VARCHAR(255) NOT NULL
+                     userId INT AUTO_INCREMENT PRIMARY KEY ,
+                     userEmail VARCHAR(50) UNIQUE NOT NULL ,
+                     userPassword VARCHAR(30) NOT NULL ,
+                     userFirstName VARCHAR(50) NOT NULL ,
+                     userLastName VARCHAR(50) NOT NULL,
+                     userRole enum('user','admin') not null default 'user',
+                     userStatus enum('new','active','deactivated') not null default 'new',
+                     userAbout TINYTEXT
 );
 
 CREATE TABLE activity_category (
-                                   category_id INT AUTO_INCREMENT PRIMARY KEY ,
-                                   category_name VARCHAR(255) UNIQUE NOT NULL,
-                                   category_description TINYTEXT
+                                   categoryId INT AUTO_INCREMENT PRIMARY KEY ,
+                                   categoryName VARCHAR(50) UNIQUE NOT NULL,
+                                   categoryDescription TINYTEXT
 );
 
 CREATE TABLE activity (
-                          activity_id INT AUTO_INCREMENT PRIMARY KEY ,
-                          category_id INT,
-                          FOREIGN KEY (category_id)
-                              REFERENCES activity_category (category_id)
+                          activityId INT AUTO_INCREMENT PRIMARY KEY ,
+                          categoryId INT,
+                          FOREIGN KEY (categoryId)
+                              REFERENCES activity_category (categoryId)
                               ON DELETE CASCADE
                               ON UPDATE CASCADE ,
-                          activity_name VARCHAR(255) UNIQUE NOT NULL,
-                          activity_description TINYTEXT
+                          activityName VARCHAR(50) UNIQUE NOT NULL,
+                          activityDescription TINYTEXT
 );
 CREATE TABLE user_activity (
-                               user_activity_id INT AUTO_INCREMENT PRIMARY KEY,
-                               user_id INT ,
-                               FOREIGN KEY (user_id)
-                                   REFERENCES user (user_id)
+                               userActivityId INT AUTO_INCREMENT PRIMARY KEY,
+                               userId INT ,
+                               FOREIGN KEY (userId)
+                                   REFERENCES user (userId)
                                    ON DELETE CASCADE
                                    ON UPDATE CASCADE ,
-                               activity_id INT,
-                               FOREIGN KEY (activity_id)
-                                   REFERENCES activity (activity_id)
+                               activityId INT,
+                               FOREIGN KEY (activityId)
+                                   REFERENCES activity (activityId)
                                    ON DELETE CASCADE
                                    ON UPDATE CASCADE ,
-                               status VARCHAR(255)
+                               activityStatus enum('requested',
+                                   'accepted',
+                                   'rejected',
+                                   'closed') not null default 'requested'
 );
 CREATE TABLE user_activity_time_log (
-                                        time_log_id INT AUTO_INCREMENT PRIMARY KEY ,
-                                        user_activity_id INT,
-                                        FOREIGN KEY (user_activity_id)
-                                            REFERENCES user_activity (user_activity_id)
+                                        timeLogId INT AUTO_INCREMENT PRIMARY KEY ,
+                                        userActivityId INT,
+                                        FOREIGN KEY (userActivityId)
+                                            REFERENCES user_activity (userActivityId)
                                             ON DELETE CASCADE
                                             ON UPDATE CASCADE ,
-                                        activity_start_date DATE NOT NULL ,
-                                        activity_time_log INT NOT NULL
+                                        activityStartDate DATE NOT NULL ,
+                                        activityTimeLog INT NOT NULL
 );

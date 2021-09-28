@@ -47,3 +47,47 @@ VALUES ('user@user.com', '123', 'User', 'User', 'user', 'active', 'Default test 
        ('bot@bot.com', '123', 'Bot', 'Tob', 'user', 'new', 'Test user. Can be deleted.'),
        ('tobot@bot.com', '123', 'Тарас', 'Бульба', 'user', 'deactivated', 'Бот-коза Тарас.');
 
+INSERT INTO time_tracker_db.user_activity(userId, activityId, activityStatus)
+VALUES ((SELECT userId FROM user WHERE userEmail = 'user@user.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Swim 50m'), 'requested'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'user@user.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Swim 100m'), 'accepted'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'user@user.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Swim 150m'), 'rejected'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'user@user.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Fly 50m'), 'closed'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'root@root.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Fly 100m'), 'closed'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'root@root.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Fly 150m'), 'accepted'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'root@root.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Пролетіти 500м'), 'accepted'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'root@root.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Каркасон 30хв'), 'requested'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'bot@bot.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Run 50m'), 'requested'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'bot@bot.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Run 100m'), 'accepted'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'bot@bot.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Run 150m'), 'rejected'),
+
+       ((SELECT userId FROM user WHERE userEmail = 'bot@bot.com'),
+        (SELECT activityId FROM activity WHERE activityName = 'Fly 50m'), 'closed');
+
+INSERT INTO time_tracker_db.user_activity_time_log(userActivityId, activityStartDate, activityTimeLog)
+VALUES ((SELECT userActivityId FROM user_activity order by rand() limit 1), '2021-1-04', 100),
+       ((SELECT userActivityId FROM user_activity order by rand() limit 1), '2021-2-24', 200),
+       ((SELECT userActivityId FROM user_activity order by rand() limit 1), '2021-3-14', 500),
+       ((SELECT userActivityId FROM user_activity order by rand() limit 1), '2021-5-04', 700),
+       ((SELECT userActivityId FROM user_activity order by rand() limit 1), '2021-9-04', 900);
+
