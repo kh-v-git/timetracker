@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.RequestDispatcher;
@@ -26,7 +25,7 @@ public class RouterServletTest {
     private RequestDispatcher requestDispatcher;
 
     @InjectMocks
-    private RouterServlet sut;
+    private RouterServlet testClass;
 
     @Test
     public void shouldExecuteCommand() throws Exception {
@@ -34,7 +33,7 @@ public class RouterServletTest {
         when(request.getContextPath()).thenReturn("/timetracker");
         when(request.getRequestDispatcher("pages/login.jsp")).thenReturn(requestDispatcher);
 
-        sut.doGet(request, response);
+        testClass.doGet(request, response);
 
         verify(request).getRequestDispatcher("pages/login.jsp");
         verify(requestDispatcher).forward(request, response);

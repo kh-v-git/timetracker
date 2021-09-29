@@ -4,6 +4,8 @@ import com.tracker.Command;
 import com.tracker.impl.user.useractivity.UserActivityRepository;
 import com.tracker.impl.user.useractivity.UserActivitySQLImpl;
 import com.tracker.impl.user.useractivity.UserActivityService;
+import com.tracker.security.RequiresRole;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
-
+@RequiresRole(UserRolesEnum.ADMIN)
 public class DeleteUserActivityCommand implements Command {
     private static final Logger log = LogManager.getLogger(DeleteUserActivityCommand.class);
     private UserActivityService userActivityService;

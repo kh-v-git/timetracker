@@ -5,6 +5,7 @@ import com.tracker.impl.user.user.User;
 import com.tracker.impl.user.user.UserRepository;
 import com.tracker.impl.user.user.UserRepositorySQLImpl;
 import com.tracker.impl.user.user.UserService;
+import com.tracker.security.RequiresRole;
 import com.tracker.utils.UserRolesEnum;
 import com.tracker.utils.UserStatusEnum;
 import org.apache.logging.log4j.Level;
@@ -15,7 +16,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-
+@RequiresRole(UserRolesEnum.ADMIN)
 public class EditUserAdminPageCommand implements Command {
     private static final Logger log = LogManager.getLogger(EditUserAdminPageCommand.class);
     @Override

@@ -10,7 +10,9 @@ import com.tracker.impl.admin.category.CategoryRepository;
 import com.tracker.impl.admin.category.CategoryRepositorySQLImpl;
 import com.tracker.impl.admin.category.CategoryService;
 import com.tracker.impl.common.data.CategoryActivitiesList;
+import com.tracker.security.RequiresRole;
 import com.tracker.utils.UserActivityStatusEnum;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@RequiresRole(UserRolesEnum.ADMIN)
 public class GetNewUserActivityAdminPageCommand implements Command {
     private static final Logger log = LogManager.getLogger(GetNewUserActivityAdminPageCommand.class);
     private ActivityRepository activityRepository;

@@ -9,6 +9,8 @@ import com.tracker.impl.user.useractivitylog.UserActivityTimeLog;
 import com.tracker.impl.user.useractivitylog.UserActivityTimeLogRepository;
 import com.tracker.impl.user.useractivitylog.UserActivityTimeLogSQLImpl;
 import com.tracker.impl.user.useractivitylog.UserActivityTimeLogService;
+import com.tracker.security.RequiresRole;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
-
+@RequiresRole(UserRolesEnum.USER)
 public class LogNewUserActivityCommand implements Command {
     private static final Logger log = LogManager.getLogger(LogNewUserActivityCommand.class);
 

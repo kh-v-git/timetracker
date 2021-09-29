@@ -5,6 +5,8 @@ import com.tracker.impl.user.user.User;
 import com.tracker.impl.user.user.UserRepository;
 import com.tracker.impl.user.user.UserRepositorySQLImpl;
 import com.tracker.impl.user.user.UserService;
+import com.tracker.security.RequiresRole;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,19 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+@RequiresRole(UserRolesEnum.ADMIN)
 public class UpdateUserAdminCommand implements Command {
     private static final Logger log = LogManager.getLogger(UpdateUserAdminCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         boolean executeStatus = false;
-        try {
-            executeStatus = pageUpdateUserProcess(request);
-        } catch (NumberFormatException n) {
-            executeStatus = false;
-            request.setAttribute("error", "User update error");
-            log.log(Level.DEBUG, "User update error on EditPageCommand", n);
-        }
+
+        executeStatus = pageUpdateUserProcess(request);
+
         if (executeStatus) {
             request.setAttribute("actionStatus", "Update user success");
         } else {
@@ -36,13 +35,19 @@ public class UpdateUserAdminCommand implements Command {
         request.getRequestDispatcher("get_user_admin_main.command").forward(request, response);
     }
 
-    private boolean pageUpdateUserProcess(HttpServletRequest processRequest) throws NumberFormatException {
+    private boolean pageUpdateUserProcess(HttpServletRequest processRequest) {
         User updateUser = new User();
-
+        Integer userId;
         UserRepository userRepository = new UserRepositorySQLImpl();
         UserService userService = new UserService(userRepository);
 
-        Integer userId = Integer.parseInt(processRequest.getParameter("userId"));
+        try {
+            userId = Integer.parseInt(processRequest.getParameter("userId"));
+        } catch (NumberFormatException n) {
+            processRequest.setAttribute("error", "User update error");
+            log.log(Level.DEBUG, "User update error on EditPageCommand", n);
+            return false;
+        }
         updateUser.setUserId(userId);
 
         updateUser.setUserFirstName(Optional.ofNullable(processRequest.getParameter("user_first_name"))

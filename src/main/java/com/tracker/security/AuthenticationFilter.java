@@ -31,7 +31,6 @@ public class AuthenticationFilter implements Filter {
             return;
         }
 
-        //TODO add logic to check user role vs request path
         chain.doFilter(request, response);
     }
 

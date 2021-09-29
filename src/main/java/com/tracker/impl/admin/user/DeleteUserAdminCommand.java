@@ -4,13 +4,15 @@ import com.tracker.Command;
 import com.tracker.impl.user.user.UserRepository;
 import com.tracker.impl.user.user.UserRepositorySQLImpl;
 import com.tracker.impl.user.user.UserService;
+import com.tracker.security.RequiresRole;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+@RequiresRole(UserRolesEnum.ADMIN)
 public class DeleteUserAdminCommand implements Command {
     private static final Logger log = LogManager.getLogger(DeleteUserAdminCommand.class);
 

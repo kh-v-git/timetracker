@@ -5,6 +5,7 @@ import com.tracker.impl.admin.activity.commands.UpdateActivityCommand;
 import com.tracker.impl.admin.category.commands.*;
 import com.tracker.impl.admin.report.GetAdminReportPageCommand;
 import com.tracker.impl.admin.user.*;
+import com.tracker.security.RequiresRole;
 import com.tracker.security.commands.IndexCommand;
 import com.tracker.security.commands.SecuredUserCommand;
 import com.tracker.security.commands.AuthenticateCommand;
@@ -13,6 +14,7 @@ import com.tracker.security.commands.LogoutCommand;
 import com.tracker.security.commands.RegisterUserPageCommand;
 import com.tracker.impl.user.user.commands.*;
 import com.tracker.impl.user.useractivity.commands.*;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,6 +96,21 @@ public class RouterServlet extends HttpServlet {
 
         if (commands.containsKey(commandName)) {
             Command command = commands.get(commandName);
+
+            //Pre-authorization check: checking user role vs required role for command
+            Annotation[] annotations = command.getClass().getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof RequiresRole) {
+                    UserRolesEnum requiredRole = ((RequiresRole) annotation).value();
+                    String existingRoleString = (String) request.getSession().getAttribute("userRole");
+                    UserRolesEnum existingRole = UserRolesEnum.valueOf(existingRoleString.toUpperCase());
+
+                    if (requiredRole != existingRole) {
+                        throw new RuntimeException("403 Forbidden");
+                    }
+                }
+            }
+
             try {
                 command.execute(request, response);
             } catch (Exception e) {

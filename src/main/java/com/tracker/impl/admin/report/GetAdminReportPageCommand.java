@@ -6,7 +6,9 @@ import com.tracker.impl.user.user.User;
 import com.tracker.impl.user.user.UserRepository;
 import com.tracker.impl.user.user.UserRepositorySQLImpl;
 import com.tracker.impl.user.user.UserService;
+import com.tracker.security.RequiresRole;
 import com.tracker.utils.UserActivityStatusEnum;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiresRole(UserRolesEnum.ADMIN)
 public class GetAdminReportPageCommand implements Command {
     private static final Logger log = LogManager.getLogger(GetAdminReportPageCommand.class);
 

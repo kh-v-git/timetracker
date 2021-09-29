@@ -14,6 +14,8 @@ import com.tracker.impl.user.useractivity.UserActivity;
 import com.tracker.impl.user.useractivity.UserActivityRepository;
 import com.tracker.impl.user.useractivity.UserActivitySQLImpl;
 import com.tracker.impl.user.useractivity.UserActivityService;
+import com.tracker.security.RequiresRole;
+import com.tracker.utils.UserRolesEnum;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@RequiresRole(UserRolesEnum.USER)
 public class LogNewActivityUserPageCommand implements Command {
     private static final Logger log = LogManager.getLogger(LogNewActivityUserPageCommand.class);
 
