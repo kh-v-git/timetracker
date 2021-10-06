@@ -24,7 +24,7 @@ public class SetNewUserAdminCommand implements Command {
         boolean executeStatus = addUserProcess(request);
 
         if (executeStatus) {
-            request.setAttribute("actionStatus", "Set new user success.");
+            request.setAttribute("actionStatus", "Set new user success");
         } else {
             request.setAttribute("actionStatus", "User add failed");
             log.log(Level.ERROR, "Category ID parse error");
@@ -39,37 +39,37 @@ public class SetNewUserAdminCommand implements Command {
 
         newUser.setUserFirstName(dataCheck(processRequest, "user_first_name"));
         if (newUser.getUserFirstName().isEmpty()) {
-            processRequest.setAttribute("error", "User First name empty.");
+            processRequest.setAttribute("error", "User First name empty");
             return false;
         }
 
         newUser.setUserLastName(dataCheck(processRequest, "user_last_name"));
         if (newUser.getUserLastName().isEmpty()) {
-            processRequest.setAttribute("error", "User Last name empty.");
+            processRequest.setAttribute("error", "User Last name empty");
             return false;
         }
 
         newUser.setUserEmail(dataCheck(processRequest, "user_email"));
         if (newUser.getUserEmail().isEmpty()) {
-            processRequest.setAttribute("error", "User email empty.");
+            processRequest.setAttribute("error", "User email empty");
             return false;
         }
 
         newUser.setUserPassword(dataCheck(processRequest, "user_password"));
         if (newUser.getUserPassword().isEmpty()) {
-            processRequest.setAttribute("error", "User password empty.");
+            processRequest.setAttribute("error", "User password empty");
             return false;
         }
 
         newUser.setUserRole(dataCheck(processRequest, "user_role"));
         if (newUser.getUserRole().isEmpty()) {
-            processRequest.setAttribute("error", "User role not set.");
+            processRequest.setAttribute("error", "User role not set");
             return false;
         }
 
         newUser.setUserStatus(dataCheck(processRequest, "user_status"));
         if (newUser.getUserStatus().isEmpty()) {
-            processRequest.setAttribute("error", "User status not set.");
+            processRequest.setAttribute("error", "User status not set");
             return false;
         }
 

@@ -14,40 +14,47 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @RequiresRole(UserRolesEnum.ADMIN)
 public class GetActivitiesMainPageCommand implements Command {
     private static final Logger log = LogManager.getLogger(GetActivitiesMainPageCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        boolean executeStatus = false;
-        try {
-            executeStatus = mainActivityProcess(request);
+        if (mainActivityProcess(request)) {
+            request.setAttribute("actionStatus", "Data search done");
+        } else {
+            request.setAttribute("actionStatus", "Data search failed");
+            log.log(Level.DEBUG, "Activities main page data processing error");
+        }
 
-        } catch (NumberFormatException n) {
-            request.setAttribute("error", "Category ID parse error");
-            executeStatus = false;
-            log.log(Level.ERROR, "Category ID parse error", n);
-        }
-        if (!executeStatus) {
-            request.setAttribute("actionStatus", "Data search failed.");
-            log.log(Level.ERROR, "Category ID parse error");
-        }
         request.getRequestDispatcher("pages/admin/activity/activity_main.jsp").forward(request, response);
     }
 
-    private boolean mainActivityProcess(HttpServletRequest processRequest) throws NumberFormatException {
+    private boolean mainActivityProcess(HttpServletRequest processRequest) {
         ActivityRepository activityRepository = new ActivityRepositorySQLImpl();
         ActivityService activityService = new ActivityService(activityRepository);
         CategoryRepository categoryRepository = new CategoryRepositorySQLImpl();
         CategoryService categoryService = new CategoryService(categoryRepository);
-
-        Integer categoryId = Optional.ofNullable(processRequest.getParameter("searchCategoryId"))
-                .filter(searchId -> !searchId.isEmpty())
-                .map(Integer::parseInt)
-                .orElse(-1);
+        Integer categoryId = -1;
+        List<Category> categories = new ArrayList<>();
+        List<Activity> activities = new ArrayList<>();
+        try {
+            categoryId = Optional.ofNullable(processRequest.getParameter("searchCategoryId"))
+                    .filter(searchId -> !searchId.isEmpty())
+                    .map(Integer::parseInt)
+                    .orElse(-1);
+        } catch (NumberFormatException n) {
+            processRequest.setAttribute("error", "Category ID parse error");
+            processRequest.getSession().setAttribute("searchCategories", categories);
+            processRequest.getSession().setAttribute("searchActivities", activities);
+            processRequest.getSession().setAttribute("searchCategoryId", categoryId);
+            log.log(Level.ERROR, "Category ID parse error", n);
+            return false;
+        }
         String searchCat = Optional.ofNullable(processRequest.getParameter("search-category"))
                 .map(Object::toString)
                 .map(String::trim)
@@ -57,16 +64,17 @@ public class GetActivitiesMainPageCommand implements Command {
                 .map(String::trim)
                 .orElse("");
 
-        List<Category> categories = categoryService.searchCategories(searchCat);
-        List<Activity> activities = activityService.searchActivityList(searchAct, categoryId);
+       categories = categoryService.searchCategories(searchCat);
+       activities = activityService.searchActivityList(searchAct, categoryId);
 
         processRequest.getSession().setAttribute("searchCategories", categories);
         processRequest.getSession().setAttribute("searchActivities", activities);
         processRequest.getSession().setAttribute("searchCategoryId", categoryId);
         processRequest.setAttribute("searchText", searchAct);
-        if (activities.isEmpty()) {
-            processRequest.setAttribute("error", "No activities found");
+        if (activities.isEmpty() || categories.isEmpty()) {
+            processRequest.setAttribute("error", "No data found");
             log.log(Level.DEBUG, "Empty activity list");
+            return false;
         }
         return true;
     }

@@ -1,56 +1,75 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<head>
-    <title>User`s Page | User DashBoard</title>
-</head>
-<body>
-<span>${error}</span>
-<span>${actionStatus}</span>
-<h1> </h1>
-<ul style="list-style-type:none">
-    <li><a href="edit_user_page.command?userId=${userId}">User Info</a></li>
-    <li><a href="request_activity_user_page.command">Request Activity</a></li>
-    <li><a href="log_activity_user_page.command">Log Activity</a></li>
-</ul>
 
-<table>
-    <caption>User Activities</caption>
-    <tr>
-        <th scope="col">Activity</th>
-        <th scope="col">Status</th>
-        <th scope="col">Time Log</th>
-        <th scope="col">Start Date</th>
-    </tr>
-    <c:forEach items="${userActivitiesList}" var="userActivities">
-        <tr>
-            <td>${userActivities.activityName}</td>
-            <td>
-                <c:choose>
-                    <c:when test="${empty userActivities.activityTimeLog}">
-                    </c:when>
-                    <c:otherwise>
-                        ${userActivities.activityTimeLog}
-                    </c:otherwise>
-                </c:choose>
-            </td>
-            <td>
-                    ${userActivities.activityStatus}</td>
-            <td>
-                <c:choose>
-                    <c:when test="${empty userActivities.activityStartDate}">
-                    </c:when>
-                    <c:otherwise>
-                        ${userActivities.activityStartDate}
-                    </c:otherwise>
-                </c:choose>
-            </td>
-        </tr>
-    </c:forEach>
-</table>
-<form action="logout.command" method="post">
-    <input type="submit" value="Logout"/>
-</form>
-</body>
-</html>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+
+<t:page title="User Page | Main">
+    <jsp:attribute name="css">
+        <!-- Custom styles for this template -->
+        <link href="css/dashboard.css" rel="stylesheet">
+    </jsp:attribute>
+    <jsp:body>
+        <div class="container-fluid">
+            <div class="row">
+                <t:user-nav currentPage="dashboard" />
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                        <h1 class="h2">User Activities</h1>
+                        <c:if test="${not empty error}">
+                            <div class="">
+                                <p class="h2">
+                                    <span class="badge bg-danger">${error}</span>
+                                </p>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty actionStatus}">
+                            <div class="">
+                                <p class="h2">
+                                    <span class="badge bg-danger">${actionStatus}</span>
+                                </p>
+                            </div>
+                        </c:if>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                        <caption>User Activities</caption>
+                        <tr>
+                            <th scope="col">Activity</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Time Log</th>
+                            <th scope="col">Start Date</th>
+                        </tr>
+                        <c:forEach items="${userActivitiesList}" var="userActivities">
+                            <tr>
+                                <td>${userActivities.activityName}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty userActivities.activityTimeLog}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${userActivities.activityTimeLog}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                        ${userActivities.activityStatus}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty userActivities.activityStartDate}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${userActivities.activityStartDate}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    </div>
+                </main>
+
+            </div>
+        </div>
+    </jsp:body>
+</t:page>

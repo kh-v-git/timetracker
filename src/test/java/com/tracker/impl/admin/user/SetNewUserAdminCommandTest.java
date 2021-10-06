@@ -18,14 +18,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({"javax.management.*", "jdk.internal.reflect.*"})
-@PrepareForTest(UpdateUserAdminCommand.class)
-public class UpdateUserAdminCommandTest {
+@PrepareForTest(SetNewUserAdminCommand.class)
+public class SetNewUserAdminCommandTest {
 
     @Mock
     private HttpServletRequest request;
@@ -46,10 +48,10 @@ public class UpdateUserAdminCommandTest {
     private ArgumentCaptor<User> userCaptor;
 
     @InjectMocks
-    private UpdateUserAdminCommand testClass;
+    private SetNewUserAdminCommand testClass;
 
     @Test
-    public void shouldNotUpdateUserData() throws Exception {
+    public void shouldSetUpNewUser() throws Exception {
         //
         // Given
         //
@@ -64,6 +66,7 @@ public class UpdateUserAdminCommandTest {
         when(request.getParameter("user_role")).thenReturn("admin");
         when(request.getParameter("user_status")).thenReturn("new");
         when(request.getParameter("user_about")).thenReturn("newNew");
+        when(userService.createNewUser(userCaptor.capture())).thenReturn(true);
         //
         // When
         //
@@ -72,31 +75,11 @@ public class UpdateUserAdminCommandTest {
         // Then
         //
         verify(request).getRequestDispatcher("get_user_admin_main.command");
-        verify(request).setAttribute("actionStatus", "Update user failed");
         verify(requestDispatcher).forward(request, response);
-        verify(userService, times(1)).updateUserByID(userCaptor.capture());
+        verify(userService).createNewUser(userCaptor.capture());
         User resultUser = userCaptor.getValue();
         assertThat(resultUser.getUserAbout(), is("newNew"));
-    }
-
-    @Test
-    public void shouldCatchNumberFormatExceptionInput() throws Exception {
-        //
-        // Given
-        //
-        whenNew(UserRepositorySQLImpl.class).withNoArguments().thenReturn(userRepository);
-        whenNew(UserService.class).withArguments(userRepository).thenReturn(userService);
-        when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
-        //
-        // When
-        //
-        testClass.execute(request, response);
-        //
-        // Then
-        //
-        verify(request).setAttribute("error", "User update error");
-        verify(request).getRequestDispatcher("get_user_admin_main.command");
-        verify(requestDispatcher).forward(request, response);
+        verify(request).setAttribute("actionStatus", "Set new user success");
     }
 
     @Test
@@ -249,6 +232,7 @@ public class UpdateUserAdminCommandTest {
         whenNew(UserRepositorySQLImpl.class).withNoArguments().thenReturn(userRepository);
         whenNew(UserService.class).withArguments(userRepository).thenReturn(userService);
         when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
         when(request.getParameter("userId")).thenReturn("1");
         when(request.getParameter("user_first_name")).thenReturn("testUser");
         when(request.getParameter("user_last_name")).thenReturn("testLast");
@@ -257,7 +241,7 @@ public class UpdateUserAdminCommandTest {
         when(request.getParameter("user_role")).thenReturn("admin");
         when(request.getParameter("user_status")).thenReturn("new");
         when(request.getParameter("user_about")).thenReturn("newNew");
-        when(userService.updateUserByID(userCaptor.capture())).thenReturn(true);
+        when(userService.updateUserByID(userCaptor.capture())).thenReturn(false);
         //
         // When
         //
@@ -267,7 +251,6 @@ public class UpdateUserAdminCommandTest {
         //
         verify(request).getRequestDispatcher("get_user_admin_main.command");
         verify(requestDispatcher).forward(request, response);
-        verify(userService, times(1)).updateUserByID(userCaptor.capture());
-        verify(request).setAttribute("actionStatus", "Update user success");
+        verify(request).setAttribute("actionStatus", "User add failed");
     }
 }

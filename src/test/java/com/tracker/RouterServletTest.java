@@ -29,14 +29,20 @@ public class RouterServletTest {
 
     @Test
     public void shouldExecuteCommand() throws Exception {
+        //
+        // Given
+        //
         when(request.getRequestURI()).thenReturn("/timetracker/login.command");
         when(request.getContextPath()).thenReturn("/timetracker");
         when(request.getRequestDispatcher("pages/login.jsp")).thenReturn(requestDispatcher);
-
+        //
+        // When
+        //
         testClass.doGet(request, response);
-
+        //
+        // Then
+        //
         verify(request).getRequestDispatcher("pages/login.jsp");
         verify(requestDispatcher).forward(request, response);
     }
-
 }

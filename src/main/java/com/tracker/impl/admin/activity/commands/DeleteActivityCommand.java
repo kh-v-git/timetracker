@@ -28,10 +28,10 @@ public class DeleteActivityCommand implements Command {
             log.log(Level.ERROR, "Activity ID parse error", n);
         }
         if (!deleteStatus) {
-            request.setAttribute("actionStatus", "Delete process failed.");
-            log.log(Level.ERROR, "Activity delete process failed. No Id found.");
+            request.setAttribute("actionStatus", "Delete process failed");
+            log.log(Level.ERROR, "Activity delete process failed. No Id found");
         } else {
-            request.setAttribute("actionStatus", "Delete activity success.");
+            request.setAttribute("actionStatus", "Delete activity success");
         }
         request.getRequestDispatcher("get_activities_main.command").forward(request, response);
     }

@@ -22,39 +22,32 @@ public class GetUserAdminMainPageCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        boolean executeStatus = false;
-        try {
-            executeStatus = mainUserProcess(request);
+        boolean executeStatus = mainUserProcess(request);
 
-        } catch (NumberFormatException n) {
-            request.setAttribute("error", "User ID parse error");
-            executeStatus = false;
-            log.log(Level.ERROR, "User ID parse error", n);
-        }
         if (!executeStatus) {
-            request.setAttribute("actionStatus", "Data search failed.");
-            log.log(Level.ERROR, "User ID parse error");
+            request.setAttribute("actionStatus", "Data search failed");
+            log.log(Level.ERROR, "Data search failed.");
         }
-
         request.getRequestDispatcher("pages/admin/user/user_admin_main.jsp").forward(request, response);
     }
 
-    private boolean mainUserProcess(HttpServletRequest processRequest) throws NumberFormatException {
+    private boolean mainUserProcess(HttpServletRequest processRequest) {
         UserRepository userRepository = new UserRepositorySQLImpl();
         UserService userService = new UserService(userRepository);
 
-        String searchAct = Optional.ofNullable(processRequest.getParameter("searchText"))
+        String searchUsers = Optional.ofNullable(processRequest.getParameter("searchText"))
                 .map(Object::toString)
                 .map(String::trim)
                 .orElse("");
 
-        List<User> users = userService.searchUsers(searchAct);
+        List<User> users = userService.searchUsers(searchUsers);
         processRequest.getSession().setAttribute("searchUsers", users);
-        processRequest.setAttribute("searchText", searchAct);
+        processRequest.setAttribute("searchText", searchUsers);
 
         if (users.isEmpty()) {
-            processRequest.setAttribute("error", "No activities found");
+            processRequest.setAttribute("error", "No user(s) found");
             log.log(Level.DEBUG, "Empty activity list");
+            return false;
         }
         return true;
     }

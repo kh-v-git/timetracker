@@ -6,12 +6,7 @@ import com.tracker.impl.admin.category.commands.*;
 import com.tracker.impl.admin.report.GetAdminReportPageCommand;
 import com.tracker.impl.admin.user.*;
 import com.tracker.security.RequiresRole;
-import com.tracker.security.commands.IndexCommand;
-import com.tracker.security.commands.SecuredUserCommand;
-import com.tracker.security.commands.AuthenticateCommand;
-import com.tracker.security.commands.LoginCommand;
-import com.tracker.security.commands.LogoutCommand;
-import com.tracker.security.commands.RegisterUserPageCommand;
+import com.tracker.security.commands.*;
 import com.tracker.impl.user.user.commands.*;
 import com.tracker.impl.user.useractivity.commands.*;
 import com.tracker.utils.UserRolesEnum;
@@ -36,9 +31,10 @@ public class RouterServlet extends HttpServlet {
 
     static {
         commands.put("/login.command", new LoginCommand());
+        commands.put("/register.command", new RegisterCommand());
         commands.put("/register_user_page.command", new RegisterUserPageCommand());
         commands.put("/authenticate.command", new AuthenticateCommand());
-        commands.put("/secured.command", new SecuredUserCommand());
+        commands.put("/secured.command", new SecuredUserPageCommand());
         commands.put("/logout.command", new LogoutCommand());
         commands.put("/index.command", new IndexCommand());
         commands.put("/get_categories_main.command", new GetCategoriesMainPageCommand());

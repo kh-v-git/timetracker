@@ -16,39 +16,61 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
 @RequiresRole(UserRolesEnum.ADMIN)
 public class EditActivityPageCommand implements Command {
     private static final Logger log = LogManager.getLogger(EditActivityPageCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CategoryRepository categoryRepository =  new CategoryRepositorySQLImpl();
-        CategoryService categoryService = new CategoryService(categoryRepository);
-        ActivityRepository activityRepository = new ActivityRepositorySQLImpl();
-        ActivityService activityService = new ActivityService(activityRepository);
+        boolean executeStatus = editActivityProcess(request);
 
-
-        int editActID = Integer.parseInt(request.getParameter("activityId"));
-        Activity editAct = activityService.getActivity(editActID);
-
-        List<Category> categories = categoryService.searchCategories("");
-        int editCatID = Integer.parseInt(request.getParameter("categoryId"));
-        Category editCat = categoryService.getCategoryByID(editCatID);
-
-        request.getSession().setAttribute("editCategory", editCat);
-        if (!categories.isEmpty()) {
-            request.getSession().setAttribute("searchCategories", categories);
+        if (executeStatus) {
+            request.setAttribute("actionStatus", "Data search done");
         } else {
-            request.setAttribute("error", "Wrong category request");
-            log.log(Level.ERROR, "Wrong category request");
-        }
-        if (!editAct.getActivityName().isEmpty()) {
-            request.getSession().setAttribute("editActivity", editAct);
-        } else {
-            request.setAttribute("error", "Wrong activity request");
-            log.log(Level.ERROR, "Wrong category request");
+            request.setAttribute("actionStatus", "Data search failed");
+            log.log(Level.DEBUG, "Activities main page data processing error");
         }
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/admin/activity/activity_edit.jsp");
         requestDispatcher.forward(request, response);
+    }
+
+    private boolean editActivityProcess(HttpServletRequest processRequest) {
+
+        CategoryRepository categoryRepository = new CategoryRepositorySQLImpl();
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        ActivityRepository activityRepository = new ActivityRepositorySQLImpl();
+        ActivityService activityService = new ActivityService(activityRepository);
+        Integer editActID;
+        Integer editCatID;
+        try {
+            editActID = Integer.parseInt(processRequest.getParameter("activityId"));
+        } catch (NumberFormatException n) {
+            processRequest.setAttribute("error", "Activity ID parse error");
+            log.log(Level.DEBUG, "Activity ID parse error", n);
+            return false;
+        }
+        Activity editAct = activityService.getActivity(editActID);
+        List<Category> categories = categoryService.searchCategories("");
+
+        try {
+            editCatID = Integer.parseInt(processRequest.getParameter("categoryId"));
+        } catch (NumberFormatException n) {
+            processRequest.setAttribute("error", "Category ID parse error");
+            log.log(Level.DEBUG, "Category ID parse error", n);
+            return false;
+        }
+
+        Category editCat = categoryService.getCategoryByID(editCatID);
+        processRequest.getSession().setAttribute("editCategory", editCat);
+        processRequest.getSession().setAttribute("editActivity", editAct);
+        processRequest.getSession().setAttribute("searchCategories", categories);
+
+        if (categories.isEmpty() || editAct.getActivityName().isEmpty()) {
+            processRequest.setAttribute("error", "No data");
+            log.log(Level.ERROR, "No data");
+            return false;
+        }
+        return true;
     }
 }

@@ -20,7 +20,7 @@ public class AuthenticationFilter implements Filter {
 
         String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
-        if (path.startsWith("/login.command") || path.startsWith("/authenticate.command") || path.startsWith("/register_user_page.command") || path.startsWith("/css")) {
+        if (path.startsWith("/login.command") || path.startsWith("/authenticate.command") || path.startsWith("/register_user_page.command") || path.startsWith("/css") || path.startsWith("/register.command") ) {
             chain.doFilter(request, response);
             return;
         }

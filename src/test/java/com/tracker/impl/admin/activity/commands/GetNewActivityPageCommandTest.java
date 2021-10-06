@@ -1,12 +1,11 @@
-package com.tracker.impl.admin.category.commands;
+package com.tracker.impl.admin.activity.commands;
 
 import com.tracker.impl.admin.category.Category;
 import com.tracker.impl.admin.category.CategoryRepositorySQLImpl;
 import com.tracker.impl.admin.category.CategoryService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -18,17 +17,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.management.*")
-@PrepareForTest(EditCategoryPageCommand.class)
-public class EditCategoryPageCommandTest {
+@PowerMockIgnore({"javax.management.*", "jdk.internal.reflect.*"})
+@PrepareForTest(GetNewActivityPageCommand.class)
+public class GetNewActivityPageCommandTest {
+
     @Mock
     private HttpServletRequest request;
 
@@ -37,60 +38,40 @@ public class EditCategoryPageCommandTest {
 
     @Mock
     private CategoryService categoryService;
+    @Mock
+    private CategoryRepositorySQLImpl categoryRepository;
 
     @Mock
     private RequestDispatcher requestDispatcher;
 
     @Mock
-    private CategoryRepositorySQLImpl categoryRepository;
-
-    @Mock
     private HttpSession session;
 
-    @Captor
-    private ArgumentCaptor<String> stringCaptor;
-
     @InjectMocks
-    private EditCategoryPageCommand testClass;
+    private GetNewActivityPageCommand testClass;
 
-    @Test
-    public void shouldRedirectToEditCategoryPage() throws Exception {
-        //
-        // Given
-        //
+    private List<Category> categoryList;
+
+    @Before
+    public void setUP() {
         Category category = new Category();
-        whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
-        whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
-        when(request.getSession()).thenReturn(session);
-        when(request.getParameter("categoryId")).thenReturn("1");
-        when(categoryService.getCategoryByID(anyInt())).thenReturn(category);
-        when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
-        //
-        // When
-        //
-        testClass.execute(request, response);
-        //
-        // Then
-        //
-        verify(categoryService, times(1)).getCategoryByID(anyInt());
-        verify(session).setAttribute("editCategory", category);
-        verify(request, times(1)).getRequestDispatcher(stringCaptor.capture());
-        assertEquals("pages/admin/category/category_edit.jsp", stringCaptor.getValue());
-        verify(request, never()).setAttribute(eq("error"), any());
-        verify(requestDispatcher).forward(request, response);
+        category.setCategoryId(1);
+        category.setCategoryName("test");
+        categoryList = new ArrayList<>();
+        categoryList.add(category);
     }
 
     @Test
-    public void shouldCatchNumberFormatException() throws Exception {
+    public void shouldRedirectToNewActivityPage() throws Exception {
         //
         // Given
         //
-        Category category = new Category();
         whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
         whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
-        when(request.getSession()).thenReturn(session);
-        when(request.getParameter("categoryId")).thenReturn("ljk");
         when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
+        when(request.getSession()).thenReturn(session);
+        when(categoryService.searchCategories(any())).thenReturn(categoryList);
+
         //
         // When
         //
@@ -98,10 +79,34 @@ public class EditCategoryPageCommandTest {
         //
         // Then
         //
-        verify(request).setAttribute("error", "Category add error");
-        verify(request, times(1)).getRequestDispatcher(stringCaptor.capture());
-        assertEquals("pages/admin/category/category_edit.jsp", stringCaptor.getValue());
+        verify(session).setAttribute("searchCategories", categoryList);
+        verify(request, never()).setAttribute(eq("error"), any());
         verify(requestDispatcher).forward(request, response);
+        verify(request).getRequestDispatcher("pages/admin/activity/activity_add_new.jsp");
+    }
+
+    @Test
+    public void shouldLogEmptyCategoryList() throws Exception {
+        //
+        // Given
+        //
+        whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
+        whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
+        when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
+        when(request.getSession()).thenReturn(session);
+        categoryList = new ArrayList<>();
+        when(categoryService.searchCategories(any())).thenReturn(categoryList);
+        //
+        // When
+        //
+        testClass.execute(request, response);
+        //
+        // Then
+        //
+        verify(session).setAttribute(eq("searchCategories"), anyCollection().isEmpty());
+        verify(request).setAttribute("error", "Wrong category request");
+        verify(requestDispatcher).forward(request, response);
+        verify(request).getRequestDispatcher("pages/admin/activity/activity_add_new.jsp");
     }
 
 }

@@ -55,7 +55,7 @@ public class UpdateUserAdminCommand implements Command {
                 .map(String::trim)
                 .orElse(""));
         if (updateUser.getUserFirstName().isEmpty()) {
-            processRequest.setAttribute("error", "User First name empty.");
+            processRequest.setAttribute("error", "User First name empty");
             return false;
         }
 
@@ -64,7 +64,7 @@ public class UpdateUserAdminCommand implements Command {
                 .map(String::trim)
                 .orElse(""));
         if (updateUser.getUserLastName().isEmpty()) {
-            processRequest.setAttribute("error", "User Last name empty.");
+            processRequest.setAttribute("error", "User Last name empty");
             return false;
         }
 
@@ -73,7 +73,7 @@ public class UpdateUserAdminCommand implements Command {
                 .map(String::trim)
                 .orElse(""));
         if (updateUser.getUserEmail().isEmpty()) {
-            processRequest.setAttribute("error", "User email empty.");
+            processRequest.setAttribute("error", "User email empty");
             return false;
         }
 
@@ -82,7 +82,7 @@ public class UpdateUserAdminCommand implements Command {
                 .map(String::trim)
                 .orElse(""));
         if (updateUser.getUserPassword().isEmpty()) {
-            processRequest.setAttribute("error", "User password empty.");
+            processRequest.setAttribute("error", "User password empty");
             return false;
         }
 
@@ -91,7 +91,7 @@ public class UpdateUserAdminCommand implements Command {
                 .map(String::trim)
                 .orElse(""));
         if (updateUser.getUserRole().isEmpty()) {
-            processRequest.setAttribute("error", "User role not set.");
+            processRequest.setAttribute("error", "User role not set");
             return false;
         }
 
@@ -100,7 +100,7 @@ public class UpdateUserAdminCommand implements Command {
                 .map(String::trim)
                 .orElse(""));
         if (updateUser.getUserStatus().isEmpty()) {
-            processRequest.setAttribute("error", "User status not set.");
+            processRequest.setAttribute("error", "User status not set");
             return false;
         }
 

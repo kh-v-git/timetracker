@@ -4,7 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:page title="Activities">
@@ -16,10 +15,23 @@
         <div class="container-fluid">
             <div class="row">
                 <t:admin-nav currentPage="activities" />
-
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                            <h1 class="h2">Dashboard</h1>
+                            <h1 class="h2">Activities table</h1>
+                            <c:if test="${not empty error}">
+                                <div class="">
+                                    <p class="h2">
+                                        <span class="badge bg-danger">${error}</span>
+                                    </p>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty actionStatus}">
+                                <div class="">
+                                    <p class="h2">
+                                        <span class="badge bg-danger">${actionStatus}</span>
+                                    </p>
+                                </div>
+                            </c:if>
                             <div class="btn-toolbar mb-2 mb-md-0">
                                 <form method="get" action="get_activities_main.command" class="w-100">
                                     <div class="btn-group mr-2">
@@ -28,7 +40,6 @@
                                                placeholder="Search activities"
                                                aria-label="Search"
                                                value="${searchText}">
-
                                         <select name="searchCategoryId" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                                             <option value="" selected disabled hidden>Choose Category</option>
                                             <option value="">All Categories</option>
@@ -48,14 +59,10 @@
                                         </select>
                                         <input class="btn btn-sm btn-outline-secondary" type="submit" value="Search"/>
                                     </div>
-
                                     <a href="get_activities_main.command" class="btn btn-sm btn-outline-secondary">Clear</a>
-
                                 </form>
                             </div>
                         </div>
-
-                    <h2>Activities table</h2>
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <a class="btn btn-primary float-right" href="get_new_activity_page.command">Add Activity</a>

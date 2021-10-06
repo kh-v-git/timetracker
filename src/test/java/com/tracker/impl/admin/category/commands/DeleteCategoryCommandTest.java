@@ -49,14 +49,21 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void shouldDeleteCategory() throws Exception {
+        //
+        // Given
+        //
         whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
         whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
         when(request.getParameter("categoryId")).thenReturn("1");
         when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
         when(categoryService.deleteCategoryByID(anyInt())).thenReturn(true);
-
+        //
+        // When
+        //
         testClass.execute(request, response);
-
+        //
+        // Then
+        //
         verify(categoryService, times(1)).deleteCategoryByID(anyInt());
         verify(request, never()).setAttribute(eq("error"), any());
         verify(request, times(1)).getRequestDispatcher(stringCaptor.capture());
@@ -66,15 +73,21 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void shouldSetErrorAttributeCategory() throws Exception {
+        //
+        // Given
+        //
         whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
         whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
-
         when(request.getParameter("categoryId")).thenReturn("1");
         when(request.getRequestDispatcher("get_categories_main.command")).thenReturn(requestDispatcher);
         when(categoryService.deleteCategoryByID(anyInt())).thenReturn(false);
-
+        //
+        // When
+        //
         testClass.execute(request, response);
-
+        //
+        // Then
+        //
         verify(categoryService, times(1)).deleteCategoryByID(anyInt());
         verify(request).setAttribute("error", "Category delete error");
         verify(requestDispatcher).forward(request, response);

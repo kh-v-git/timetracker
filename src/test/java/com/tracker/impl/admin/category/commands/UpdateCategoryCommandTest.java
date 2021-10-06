@@ -51,7 +51,9 @@ public class UpdateCategoryCommandTest {
 
     @Test
     public void shouldUpdateCategory() throws Exception {
-
+        //
+        // Given
+        //
         whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
         whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
         when(request.getParameter("categoryId")).thenReturn("1");
@@ -59,9 +61,13 @@ public class UpdateCategoryCommandTest {
         when(request.getParameter("catNewDescription")).thenReturn("description");
         when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
         when(categoryService.updateCategoryByID(any())).thenReturn(true);
-
+        //
+        // When
+        //
         testClass.execute(request, response);
-
+        //
+        // Then
+        //
         verify(categoryService, times(1)).updateCategoryByID(any());
         verify(request, never()).setAttribute(eq("error"), any());
         verify(request, times(1)).getRequestDispatcher(stringCaptor.capture());

@@ -17,7 +17,6 @@ public class AddUserAdminPageCommand implements Command {
         List<String> userStatuses = UserStatusEnum.getUserStatuses();
         request.getSession().setAttribute("userRoles", userRoles);
         request.getSession().setAttribute("userStatuses", userStatuses);
-
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/admin/user/user_admin_add_new.jsp");
         requestDispatcher.forward(request, response);
     }

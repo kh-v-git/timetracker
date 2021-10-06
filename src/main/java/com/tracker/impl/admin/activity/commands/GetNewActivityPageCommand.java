@@ -23,14 +23,11 @@ public class GetNewActivityPageCommand implements Command {
         CategoryRepository categoryRepository =  new CategoryRepositorySQLImpl();
         CategoryService categoryService = new CategoryService(categoryRepository);
 
-
         List<Category> categories = categoryService.searchCategories("");
-
         if (categories.isEmpty()) {
             request.setAttribute("error", "Wrong category request");
             log.log(Level.ERROR, "Wrong category request");
         }
-
         request.getSession().setAttribute("searchCategories", categories);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("pages/admin/activity/activity_add_new.jsp");
         requestDispatcher.forward(request, response);

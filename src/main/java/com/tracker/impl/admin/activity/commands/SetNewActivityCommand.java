@@ -14,33 +14,33 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+
 @RequiresRole(UserRolesEnum.ADMIN)
 public class SetNewActivityCommand implements Command {
     private static final Logger log = LogManager.getLogger(SetNewActivityCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        boolean executeStatus = false;
-        try {
-            executeStatus = addActivityProcess(request);
-            request.setAttribute("actionStatus", "Set new activity success.");
-        } catch (NumberFormatException n) {
-            request.setAttribute("error", "Category ID parse error");
-            log.log(Level.ERROR, "Category ID parse error", n);
-        }
-        if (!executeStatus) {
+        boolean executeStatus = addActivityProcess(request);
+        if (executeStatus) {
+            request.setAttribute("actionStatus", "Activity add success");
+        } else {
             request.setAttribute("actionStatus", "Activity add failed");
-            log.log(Level.ERROR, "Category ID parse error");
         }
-
         request.getRequestDispatcher("get_activities_main.command").forward(request, response);
     }
 
-    private boolean addActivityProcess(HttpServletRequest processRequest) throws NumberFormatException {
+    private boolean addActivityProcess(HttpServletRequest processRequest) {
         ActivityRepository activityRepository = new ActivityRepositorySQLImpl();
         ActivityService activityService = new ActivityService(activityRepository);
-
-        int categoryID = Integer.parseInt(processRequest.getParameter("categoryId"));
+        Integer categoryID;
+        try {
+            categoryID = Integer.parseInt(processRequest.getParameter("categoryId"));
+        } catch (NumberFormatException n) {
+            processRequest.setAttribute("error", "Category ID parse error");
+            log.log(Level.ERROR, "Category ID parse error", n);
+            return false;
+        }
         String addActName = Optional.ofNullable(processRequest.getParameter("actNewName"))
                 .map(Object::toString)
                 .map(String::trim)
@@ -49,16 +49,15 @@ public class SetNewActivityCommand implements Command {
                 .map(Object::toString)
                 .map(String::trim)
                 .orElse("");
-
-
-        if (addActName.isEmpty()|| addActDescription.isEmpty()) {
+        if (addActName.isEmpty() || addActDescription.isEmpty()) {
+            log.log(Level.DEBUG, "Activity data empty");
             return false;
-        } else {
-            Activity newActivity = new Activity();
-            newActivity.setActivityName(addActName);
-            newActivity.setActivityCatId(categoryID);
-            newActivity.setActivityDescription(addActDescription);
-            return  activityService.setActivity(newActivity);
         }
+        Activity newActivity = new Activity();
+        newActivity.setActivityName(addActName);
+        newActivity.setActivityCatId(categoryID);
+        newActivity.setActivityDescription(addActDescription);
+        return activityService.setActivity(newActivity);
+
     }
 }

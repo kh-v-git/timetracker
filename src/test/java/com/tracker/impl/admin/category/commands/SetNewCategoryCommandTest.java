@@ -50,15 +50,22 @@ public class SetNewCategoryCommandTest {
 
     @Test
     public void shouldSetNewCategory() throws Exception {
+        //
+        // Given
+        //
         whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
         whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
         when(request.getParameter("catNewName")).thenReturn("test");
         when(request.getParameter("catNewDescription")).thenReturn("testDescription");
         when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
         when(categoryService.createNewCategory(any())).thenReturn(true);
-
+        //
+        // When
+        //
         testClass.execute(request, response);
-
+        //
+        // Then
+        //
         verify(categoryService, times(1)).createNewCategory(any());
         verify(request, times(1)).getRequestDispatcher(stringCaptor.capture());
         assertEquals("get_categories_main.command", stringCaptor.getValue());
@@ -68,6 +75,9 @@ public class SetNewCategoryCommandTest {
 
     @Test
     public void shouldReturnAttributeErrorNewCategory() throws Exception {
+        //
+        // Given
+        //
         whenNew(CategoryRepositorySQLImpl.class).withNoArguments().thenReturn(categoryRepository);
         whenNew(CategoryService.class).withArguments(categoryRepository).thenReturn(categoryService);
         when(request.getParameter("catNewName")).thenReturn(null);
@@ -75,9 +85,13 @@ public class SetNewCategoryCommandTest {
         when(request.getRequestDispatcher(any())).thenReturn(requestDispatcher);
         when(request.getRequestDispatcher("get_categories_main.command")).thenReturn(requestDispatcher);
         when(categoryService.createNewCategory(any())).thenReturn(false);
-
+        //
+        // When
+        //
         testClass.execute(request, response);
-
+        //
+        // Then
+        //
         verify(request).setAttribute("error", "Category add error");
         verify(requestDispatcher).forward(request, response);
     }

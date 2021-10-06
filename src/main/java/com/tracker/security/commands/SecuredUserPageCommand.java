@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RequiresRole(UserRolesEnum.ADMIN)
-public class SecuredUserCommand implements Command {
+public class SecuredUserPageCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

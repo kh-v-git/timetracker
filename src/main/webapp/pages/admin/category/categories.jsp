@@ -2,7 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:page title="Admin Page | Categories Main">
@@ -14,10 +13,23 @@
         <div class="container-fluid">
             <div class="row">
                 <t:admin-nav currentPage="activity-categories" />
-
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                        <h1 class="h2">Dashboard</h1>
+                        <h1 class="h2">Categories table</h1>
+                        <c:if test="${not empty error}">
+                            <div class="">
+                                <p class="h2">
+                                    <span class="badge bg-danger">${error}</span>
+                                </p>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty actionStatus}">
+                            <div class="">
+                                <p class="h2">
+                                    <span class="badge bg-danger">${actionStatus}</span>
+                                </p>
+                            </div>
+                        </c:if>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <form method="get" action="get_categories_main.command" class="w-100">
                                 <div class="btn-group mr-2">
@@ -35,8 +47,6 @@
                             </form>
                         </div>
                     </div>
-
-                    <h2>Categories table</h2>
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <a class="btn btn-primary float-right" href="get_category_page.command">Add Category</a>
@@ -65,7 +75,6 @@
                 </main>
             </div>
         </div>
-
     </jsp:body>
 </t:page>
 
